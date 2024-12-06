@@ -39,13 +39,22 @@ git_prompt_info() {
     fi
 }
 
+# Virtual environment status function
+venv_info() {
+    # Check if in virtual environment
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        # Extract venv name - everything after the last '/'
+        printf "$(tput setaf 5)($(basename $VIRTUAL_ENV))$(tput sgr0) "
+    fi
+}
+
 # Define color codes using tput
 BLUE="$(tput setaf 4)"
 GREEN="$(tput setaf 2)"
 RESET="$(tput sgr0)"
 
 # Set up prompt with git information
-PROMPT_COMMAND='PS1="${BLUE}\w${RESET} $(git_prompt_info) ${GREEN}➜${RESET} "'
+PROMPT_COMMAND='PS1="$(venv_info)${BLUE}\w${RESET} $(git_prompt_info) ${GREEN}➜${RESET} "'
 
 # Docker alias for aider (if you're using it)
 alias aider="docker run -it --rm --user \$(id -u):\$(id -g) --volume \$(pwd):/app paulgauthier/aider --openai-api-key \$OPENAI_API_KEY --anthropic-api-key \$ANTHROPIC_API_KEY"
